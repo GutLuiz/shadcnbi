@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 
 //componente:
 import { Header } from "@/components/Header/header";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,10 +38,13 @@ export default function RootLayout({
           "min-h-screen bg-background font-sans antialiased",
           inter.className
         )}
+
       >
-        <Header />
-        {children}
+          <Header />
+          <main>
+            {children}
+          </main>
       </body>
-    </html>
+    </html >
   );
 }
