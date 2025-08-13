@@ -13,12 +13,9 @@ import {
 export function Header() {
   return (
     <div className="flex w-full bg-muted/40">
-      <aside className="fixed inset-y-o left-0 z-10 hidden w-14 border-r bg-gray-400 sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 py-5"></nav>
-      </aside>
-      <div className="sm:hidden flex flex-col sm:py-4 sm:pl-14">
+      <div className="w-full sm:hidden flex flex-col sm:py-4 sm:pl-14">
         <header
-          className="sticky top-0 z-30 flex h-14 items-center px-4 border-b gap-4 sm:static
+          className="w-full sticky top-0 z-30 flex h-14 items-center px-4 border-b gap-4 sm:static
         sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
         >
           <Sheet>
@@ -28,7 +25,7 @@ export function Header() {
               </Button>
             </SheetTrigger>
 
-            <SheetContent  className="sm:max-w-x">
+            <SheetContent side="left" className="sm:max-w-x">
               <nav className="grid gap-6 text-lg font-medium p-5">
                 <Link
                   href="#"
