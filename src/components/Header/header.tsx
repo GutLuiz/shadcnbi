@@ -1,4 +1,4 @@
-import { Sheet, SheetTrigger, SheetContent } from "../ui/sheet";
+import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "../ui/sheet";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import {
@@ -43,7 +43,7 @@ export function Header() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                href="/"
                 className=" flex h-10 w-10 shrink-0 items-center justify-center 
                 text-muted-foreground transition-colors hover:text-foreground">
                 <Home className="h-5 w-5" />
@@ -54,7 +54,7 @@ export function Header() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                href="/vendas"
                 className=" flex h-10 w-10 shrink-0 items-center justify-center 
                 text-muted-foreground transition-colors hover:text-foreground">
                 <ShoppingBag className="h-5 w-5" />
@@ -100,22 +100,19 @@ export function Header() {
             </SheetTrigger>
 
             <SheetContent side="left" className="sm:max-w-x">
-              <nav className="grid gap-8 text-lg font-b p-5 text-black ">
+              <SheetTitle className="gap-2  p-5  ">
+                <img src={logo.src} alt="" className="w-auto h-12" />
+              </SheetTitle>
+              <nav className="grid gap-6 text-lg font-b p-5 text-black ">
                 <Link
-                  href="#"
-                  className=""
-                >
-                  <img src={logo.src} alt="" className="w-auto h-12" />
-                </Link>
-                <Link
-                  href="#"
+                  href="/"
                   className="flex items-center gap-4 px-2.5  hover:text-foregroun"
                 >
                   <Home className="h-5 w-5 transition-all  " />
                   Geral
                 </Link>
                 <Link
-                  href="#"
+                  href="/vendas"
                   className="flex items-center gap-4 px-2.5  hover:text-foreground "
                 >
                   <ShoppingBag className="h-5 w-5 transition-all" />
