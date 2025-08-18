@@ -1,12 +1,11 @@
-"use client"
-
+"use client";
 
 import {
   ShoppingBag,
   Users,
   Crosshair,
   BadgeDollarSign,
-  Circle
+  Circle,
 } from "lucide-react";
 
 import {
@@ -16,7 +15,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/components/ui/chart";
 
 import {
   Table,
@@ -29,14 +28,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-
-import { CartesianGrid, Line, LineChart, Pie, PieChart, ResponsiveContainer, XAxis, YAxis, Label, PolarRadiusAxis, RadialBar, RadialBarChart, Bar, BarChart, Legend } from "recharts"
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Label,
+  PolarRadiusAxis,
+  RadialBar,
+  RadialBarChart,
+  Bar,
+  BarChart,
+  Legend,
+} from "recharts";
 
 // componentes:
 import Kards from "@/components/Cards/kards";
 import Grafico from "@/components/Graficos/grafico";
 import Tabelas from "@/components/Tabelas/tabelas";
-
 
 const pedidos = [
   { month: "Janeiro", pedidos: 186 },
@@ -47,18 +60,17 @@ const pedidos = [
   { month: "Julho", pedidos: 214 },
 ];
 
-
 const pedidosConfig = {
   desktop: {
     label: "pedidos",
     color: "var(--chart-1)",
-  }
-} satisfies ChartConfig
+  },
+} satisfies ChartConfig;
 
 const clientes = [
   { name: "Cadastrados", value: 350, fill: "var(--chart-1)" },
   { name: "Ativos", value: 100, fill: "var(--chart-2)" },
-]
+];
 const clientesConfig = {
   value: {
     label: "Clientes",
@@ -71,9 +83,9 @@ const clientesConfig = {
     label: "Ativos",
     color: "var(--chart-2)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-const vendapormeta = [{ vendas: 1260, meta: 5700 }]
+const vendapormeta = [{ vendas: 1260, meta: 5700 }];
 
 const vendapormetaconfig = {
   desktop: {
@@ -84,9 +96,9 @@ const vendapormetaconfig = {
     label: "vendas",
     color: "var(--chart-2)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-const totalVisitors = vendapormeta[0].vendas
+const totalVisitors = vendapormeta[0].vendas;
 
 const produtos = [
   { produtos: "Eletrônicos", quantidade: 275, fill: "var(--color-chrome)" },
@@ -94,7 +106,7 @@ const produtos = [
   { produtos: "Alimentos", quantidade: 187, fill: "var(--color-firefox)" },
   { produtos: "Decoração", quantidade: 173, fill: "var(--color-edge)" },
   { produtos: "Outros", quantidade: 90, fill: "var(--color-other)" },
-]
+];
 
 const produtosConfig = {
   quantidade: {
@@ -120,8 +132,7 @@ const produtosConfig = {
     label: "Outros",
     color: "var(--chart-5)",
   },
-} satisfies ChartConfig
-
+} satisfies ChartConfig;
 
 interface Fatura {
   idcliente: string;
@@ -131,23 +142,44 @@ interface Fatura {
 }
 
 const faturas: Fatura[] = [
-  { idcliente: "1", nome: "juliana", pedidos: "5 pedidos", totalAmount: "R$1100" },
-  { idcliente: "2", nome: "Felipe", pedidos: "2 pedidos", totalAmount: "R$200" },
-  { idcliente: "3", nome: "jonas", pedidos: "1 pedidos", totalAmount: "R$4100" },
+  {
+    idcliente: "1",
+    nome: "juliana",
+    pedidos: "5 pedidos",
+    totalAmount: "R$1100",
+  },
+  {
+    idcliente: "2",
+    nome: "Felipe",
+    pedidos: "2 pedidos",
+    totalAmount: "R$200",
+  },
+  {
+    idcliente: "3",
+    nome: "jonas",
+    pedidos: "1 pedidos",
+    totalAmount: "R$4100",
+  },
   { idcliente: "4", nome: "luiz", pedidos: "4 pedidos", totalAmount: "R$2200" },
-  { idcliente: "5", nome: "gustavo", pedidos: "3 pedidos", totalAmount: "R$4100" },
+  {
+    idcliente: "5",
+    nome: "gustavo",
+    pedidos: "3 pedidos",
+    totalAmount: "R$4100",
+  },
 ];
-
 
 export default function Home() {
   return (
     <main className="sm:ml-14">
       <h1 className="m-5 font-bold text-lg lg:text-2xl">Dahsboard Geral</h1>
-      <section className="grid grid-cols-2 w-[90%] mx-auto gap-5 
+      <section
+        className="grid grid-cols-2 w-[90%] mx-auto gap-5 
       sm:w-[80%]
       md:w-[75%]
       lg:grid-cols-4 
-      2xl:w-[70%] 2xl:gap-15">
+      2xl:w-[70%] 2xl:gap-15"
+      >
         <Kards
           titulo="Pedidos:"
           tituloDesc="Pedidos aprovados"
@@ -172,21 +204,17 @@ export default function Home() {
           icone={<Crosshair size={18} />}
           dados="20%"
         />
-
-
       </section>
 
-      <section className="flex flex-col justify-center items-center mb-5
-            lg:flex-row lg:flex-wrap lg:gap-5">
+      <section
+        className="flex flex-col justify-center items-center mb-5
+            lg:flex-row lg:flex-wrap lg:gap-5"
+      >
         <div className="w-[95%] mb-5 lg:w-[60%] lg:mb-0">
           <Grafico titulografico="Pedidos Realizados">
             <ResponsiveContainer height={250}>
               <ChartContainer config={pedidosConfig} className="h-full w-full">
-                <LineChart
-                  accessibilityLayer
-                  data={pedidos}
-
-                >
+                <LineChart accessibilityLayer data={pedidos}>
                   <CartesianGrid vertical={false} />
                   <XAxis
                     dataKey="month"
@@ -233,16 +261,14 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col justify-center items-center  lg:flex-row lg:gap-5 ">
-        <div className="w-[95%] mb-5 lg:w-[25%] lg:mb-0" >
+        <div className="w-[95%] mb-5 lg:w-[25%] lg:mb-0">
           <Grafico titulografico="Vendas/Meta">
             <ResponsiveContainer height={250}>
               <ChartContainer
-
                 config={vendapormetaconfig}
                 className="mx-auto aspect-square w-full max-w-[250px]"
               >
                 <RadialBarChart
-
                   data={vendapormeta}
                   endAngle={180}
                   innerRadius={80}
@@ -253,13 +279,20 @@ export default function Home() {
                     content={<ChartTooltipContent hideLabel />}
                   />
 
-                  <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-
+                  <PolarRadiusAxis
+                    tick={false}
+                    tickLine={false}
+                    axisLine={false}
+                  >
                     <Label
                       content={({ viewBox }) => {
                         if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                           return (
-                            <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
+                            <text
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              textAnchor="middle"
+                            >
                               <tspan
                                 x={viewBox.cx}
                                 y={(viewBox.cy || 0) - 16}
@@ -275,7 +308,7 @@ export default function Home() {
                                 Vendas
                               </tspan>
                             </text>
-                          )
+                          );
                         }
                       }}
                     />
@@ -299,14 +332,21 @@ export default function Home() {
                     verticalAlign="bottom"
                     align="center"
                     payload={[
-                      { value: "Meta", type: "line", color: "var(--color-desktop)" },
-                      { value: "Vendas", type: "line", color: "var(--color-mobile)" },
+                      {
+                        value: "Meta",
+                        type: "line",
+                        color: "var(--color-desktop)",
+                      },
+                      {
+                        value: "Vendas",
+                        type: "line",
+                        color: "var(--color-mobile)",
+                      },
                     ]}
                   />
                 </RadialBarChart>
               </ChartContainer>
             </ResponsiveContainer>
-
           </Grafico>
         </div>
         <div className="w-[95%] mb-5  lg:w-[39%] lg:mb-0">
@@ -328,8 +368,15 @@ export default function Home() {
                     width={100}
                   />
                   <XAxis type="number" dataKey="quantidade" hide />
-                  <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-                  <Bar dataKey="quantidade" layout="vertical" fill="var(--chart-1)" />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Bar
+                    dataKey="quantidade"
+                    layout="vertical"
+                    fill="var(--chart-1)"
+                  />
                 </BarChart>
               </ChartContainer>
             </ResponsiveContainer>
