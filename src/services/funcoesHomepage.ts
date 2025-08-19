@@ -17,7 +17,51 @@ export function CadastradosxAtivos(clientes: Cliente[], pedidos: Pedido[]) {
   ).length;
 
   return [
-    { nome: "Cadastrados", ativos: totalclientes },
-    { nome: "Ativos", ativos: quantidadeAtivos },
+    { name: "Cadastrados", value: totalclientes, fill: "var(--chart-1)" },
+    { name: "Ativos", value: quantidadeAtivos, fill: "var(--chart-2)" },
   ];
+}
+
+export function PedidosRealizados(pedidos: Pedido[]) {
+  const meses = [
+    "jan",
+    "fev",
+    "mar",
+    "abr",
+    "mai",
+    "jun",
+    "jul",
+    "ago",
+    "set",
+    "out",
+    "nov",
+    "dez",
+  ];
+
+  // fazendo uma contagem com o record com as chaves: string e numero. Primeiramente retornando vazio
+  const contagem: Record<string, number> = {};
+
+  // Percorre por todas as datas que tem em pedidos, pega o mes desse pedido, pega o mes e coloca ele em pequeno, tira o . para "vazio" e coloca tudo minusculo
+  pedidos.forEach((pedido) => {
+    try {
+      const data = new Date(pedido.date);
+      const mes = data
+        .toLocaleString("pt-BR", { month: "short" })
+        .replace(".", "")
+        .toLowerCase();
+
+      if (!contagem[mes]) {
+        contagem[mes] = 0;
+      }
+      contagem[mes]++;
+    } catch (error) {
+      console.error("Erro ao processar data:", pedido.date, error);
+    }
+  });
+
+  console.log("Contagem por mês:", contagem);
+
+  return meses
+    .map((mes) => ({ mes, totalPedidos: contagem[mes] || 0 }))
+    .filter((item) => item.totalPedidos > 0);
 }

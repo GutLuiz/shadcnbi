@@ -63,16 +63,10 @@ import { BuscarClientes } from "@/api/clientes";
 import { BuscarProdutos } from "@/api/produtos";
 
 //servicos
-import { CadastradosxAtivos } from "@/services/funcoesHomepage";
-
-const pedidos1 = [
-  { month: "Janeiro", pedidos: 186 },
-  { month: "Fevereiro", pedidos: 305 },
-  { month: "Março", pedidos: 237 },
-  { month: "Abril", pedidos: 73 },
-  { month: "Maio", pedidos: 209 },
-  { month: "Julho", pedidos: 214 },
-];
+import {
+  CadastradosxAtivos,
+  PedidosRealizados,
+} from "@/services/funcoesHomepage";
 
 const pedidosConfig = {
   desktop: {
@@ -214,9 +208,30 @@ export default function Home() {
   // DATA CADASTRADOS X ATIVOS:
   const dadosClientes = CadastradosxAtivos(clientes, pedidos);
 
+  // DATA PEDIDOS REALIZADOS:
+  const dadosPedidos = PedidosRealizados(pedidos);
+
+
+  //CONFIGS
   const clientesConfig = {
-    Cadastrados: { label: "Cadastrados", color: "var(--chart-1)" },
-    Ativos: { label: "Ativos", color: "var(--chart-2)" },
+    value: {
+      label: "Clientes",
+    },
+    Cadastrados: {
+      label: "Cadastrados",
+      color: "var(--chart-1)",
+    },
+    Ativos: {
+      label: "Ativos",
+      color: "var(--chart-2)",
+    },
+  } satisfies ChartConfig;
+
+  const pedidosConfig = {
+    totalPedidos: {
+      label: "Pedidos",
+      color: "var(--chart-1)",
+    },
   } satisfies ChartConfig;
 
   return (
@@ -263,10 +278,10 @@ export default function Home() {
           <Grafico titulografico="Pedidos Realizados">
             <ResponsiveContainer height={250}>
               <ChartContainer config={pedidosConfig} className="h-full w-full">
-                <LineChart accessibilityLayer data={pedidos1}>
+                <LineChart accessibilityLayer data={dadosPedidos}>
                   <CartesianGrid vertical={false} />
                   <XAxis
-                    dataKey="month"
+                    dataKey="mes"
                     tickLine={false}
                     axisLine={false}
                     tickMargin={8}
@@ -278,7 +293,7 @@ export default function Home() {
                     content={<ChartTooltipContent hideLabel />}
                   />
                   <Line
-                    dataKey="pedidos"
+                    dataKey="totalPedidos"
                     type="natural"
                     stroke="var(--chart-1)"
                     strokeWidth={2}
@@ -305,9 +320,9 @@ export default function Home() {
                 <ChartLegend content={<ChartLegendContent />} />
                 <Pie
                   data={dadosClientes}
-                  dataKey="ativos"
+                  dataKey="value"
+                  nameKey="name"
                   label
-                  nameKey="nome"
                 />
               </PieChart>
             </ChartContainer>
