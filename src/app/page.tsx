@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 
 import {
   ShoppingBag,
@@ -51,7 +52,20 @@ import Kards from "@/components/Cards/kards";
 import Grafico from "@/components/Graficos/grafico";
 import Tabelas from "@/components/Tabelas/tabelas";
 
-const pedidos = [
+//types
+import { Pedido } from "@/types/pedidos";
+import { Cliente } from "@/types/clientes";
+import { Produto } from "@/types/produtos";
+
+//api
+import { BuscarPedidos } from "@/api/pedidos";
+import { BuscarClientes } from "@/api/clientes";
+import { BuscarProdutos } from "@/api/produtos";
+
+//servicos
+import { CadastradosxAtivos } from "@/services/funcoesHomepage";
+
+const pedidos1 = [
   { month: "Janeiro", pedidos: 186 },
   { month: "Fevereiro", pedidos: 305 },
   { month: "Março", pedidos: 237 },
@@ -67,23 +81,23 @@ const pedidosConfig = {
   },
 } satisfies ChartConfig;
 
-const clientes = [
-  { name: "Cadastrados", value: 350, fill: "var(--chart-1)" },
-  { name: "Ativos", value: 100, fill: "var(--chart-2)" },
-];
-const clientesConfig = {
-  value: {
-    label: "Clientes",
-  },
-  Cadastrados: {
-    label: "Cadastrados",
-    color: "var(--chart-1)",
-  },
-  Ativos: {
-    label: "Ativos",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig;
+// const clientes = [
+//   { name: "Cadastrados", value: 350, fill: "var(--chart-1)" },
+//   { name: "Ativos", value: 100, fill: "var(--chart-2)" },
+// ];
+// const clientesConfig = {
+//   value: {
+//     label: "Clientes",
+//   },
+//   Cadastrados: {
+//     label: "Cadastrados",
+//     color: "var(--chart-1)",
+//   },
+//   Ativos: {
+//     label: "Ativos",
+//     color: "var(--chart-2)",
+//   },
+// } satisfies ChartConfig;
 
 const vendapormeta = [{ vendas: 1260, meta: 5700 }];
 
@@ -170,6 +184,41 @@ const faturas: Fatura[] = [
 ];
 
 export default function Home() {
+  //constantes states
+  const [pedidos, setPedidos] = useState<Pedido[]>([]);
+  const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [produtos, setProdutos] = useState<Produto[]>([]);
+
+  // Buscando as Funções da api:
+  async function FetchPedidos() {
+    const dataPedidos = await BuscarPedidos();
+    setPedidos(dataPedidos || []);
+  }
+
+  async function FetchClientes() {
+    const dataClientes = await BuscarClientes();
+    setClientes(dataClientes || []);
+  }
+
+  async function FetchProdutos() {
+    const dataProdutos = await BuscarProdutos();
+    setProdutos(dataProdutos || []);
+  }
+
+  useEffect(() => {
+    FetchPedidos();
+    FetchClientes();
+    FetchProdutos();
+  }, []);
+
+  // DATA CADASTRADOS X ATIVOS:
+  const dadosClientes = CadastradosxAtivos(clientes, pedidos);
+
+  const clientesConfig = {
+    Cadastrados: { label: "Cadastrados", color: "var(--chart-1)" },
+    Ativos: { label: "Ativos", color: "var(--chart-2)" },
+  } satisfies ChartConfig;
+
   return (
     <main className="sm:ml-14">
       <h1 className="m-5 font-bold text-lg lg:text-2xl">Dahsboard Geral</h1>
@@ -214,7 +263,7 @@ export default function Home() {
           <Grafico titulografico="Pedidos Realizados">
             <ResponsiveContainer height={250}>
               <ChartContainer config={pedidosConfig} className="h-full w-full">
-                <LineChart accessibilityLayer data={pedidos}>
+                <LineChart accessibilityLayer data={pedidos1}>
                   <CartesianGrid vertical={false} />
                   <XAxis
                     dataKey="month"
@@ -254,7 +303,12 @@ export default function Home() {
               <PieChart height={250}>
                 <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                 <ChartLegend content={<ChartLegendContent />} />
-                <Pie data={clientes} dataKey="value" label nameKey="browser" />
+                <Pie
+                  data={dadosClientes}
+                  dataKey="ativos"
+                  label
+                  nameKey="nome"
+                />
               </PieChart>
             </ChartContainer>
           </Grafico>
