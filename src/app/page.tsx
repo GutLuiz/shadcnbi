@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   ShoppingBag,
   Users,
   Crosshair,
   BadgeDollarSign,
-  Circle,
 } from "lucide-react";
 
 import {
@@ -19,14 +19,7 @@ import {
 } from "@/components/ui/chart";
 
 import {
-  Table,
-  TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
 } from "@/components/ui/table";
 
 import {
@@ -45,6 +38,7 @@ import {
   Bar,
   BarChart,
   Legend,
+  Cell,
 } from "recharts";
 
 // componentes:
@@ -65,10 +59,14 @@ import { BuscarProdutos } from "@/api/produtos";
 //servicos
 import {
   CadastradosxAtivos,
+  topClientes
+} from "@/services/clientes";
+
+import {
   PedidosRealizados,
-  ClientesAtivosCard,
-  pedidosAprovadosCard,
-} from "@/services/funcoesHomepage";
+  ProdutosMaisPedidos
+} from "@/services/pedidos";
+
 
 const vendapormeta = [{ vendas: 1260, meta: 5700 }];
 
@@ -85,76 +83,13 @@ const vendapormetaconfig = {
 
 const totalVisitors = vendapormeta[0].vendas;
 
-const produtos = [
-  { produtos: "Eletrônicos", quantidade: 275, fill: "var(--color-chrome)" },
-  { produtos: "Moda", quantidade: 200, fill: "var(--color-safari)" },
-  { produtos: "Alimentos", quantidade: 187, fill: "var(--color-firefox)" },
-  { produtos: "Decoração", quantidade: 173, fill: "var(--color-edge)" },
-  { produtos: "Outros", quantidade: 90, fill: "var(--color-other)" },
-];
 
-const produtosConfig = {
-  quantidade: {
-    label: "Visitors",
-  },
-  chrome: {
-    label: "Eletrônicos",
-    color: "var(--chart-1)",
-  },
-  safari: {
-    label: "Moda",
-    color: "var(--chart-2)",
-  },
-  firefox: {
-    label: "Alimentos",
-    color: "var(--chart-3)",
-  },
-  edge: {
-    label: "Decoração",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Outros",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig;
-
-interface Fatura {
-  idcliente: string;
-  nome: string;
-  pedidos: string;
-  totalAmount: string;
-}
-
-const faturas: Fatura[] = [
-  {
-    idcliente: "1",
-    nome: "juliana",
-    pedidos: "5 pedidos",
-    totalAmount: "R$1100",
-  },
-  {
-    idcliente: "2",
-    nome: "Felipe",
-    pedidos: "2 pedidos",
-    totalAmount: "R$200",
-  },
-  {
-    idcliente: "3",
-    nome: "jonas",
-    pedidos: "1 pedidos",
-    totalAmount: "R$4100",
-  },
-  { idcliente: "4", nome: "luiz", pedidos: "4 pedidos", totalAmount: "R$2200" },
-  {
-    idcliente: "5",
-    nome: "gustavo",
-    pedidos: "3 pedidos",
-    totalAmount: "R$4100",
-  },
-];
 
 export default function Home() {
+  const router = useRouter();
+  const rotaVendas = "/vendas";
+
+
   //constantes states
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
@@ -185,9 +120,14 @@ export default function Home() {
   // CARDS:
 
   // PEDIDOS REALIZADOS:
-  const dataAprovadosCard = pedidosAprovadosCard(pedidos);
+  function PedidosAprovadosCard(pedidos: Pedido[]) {
+    return new Set(pedidos.map((pedido) => pedido.id)).size;
+  }
+
   // DATA CLIENTES ATIVOS:
-  const dataAtivosCard = ClientesAtivosCard(pedidos);
+  function ClientesAtivosCard(pedidos: Pedido[]) {
+    return new Set(pedidos.map((pedido) => pedido.userId)).size;
+  }
 
   //GRAFICOS:
 
@@ -195,6 +135,11 @@ export default function Home() {
   const dadosPedidos = PedidosRealizados(pedidos);
   // DATA CADASTRADOS X ATIVOS:
   const dadosClientes = CadastradosxAtivos(clientes, pedidos);
+  //DATA PRODUTO MAIS PEDIDOS:
+  const dadosProdutos = ProdutosMaisPedidos(pedidos, produtos);
+
+  //TABELAS:
+  const dataTabela = topClientes(pedidos, clientes, produtos)
 
   //CONFIGS
   const clientesConfig = {
@@ -218,6 +163,13 @@ export default function Home() {
     },
   } satisfies ChartConfig;
 
+  const produtosConfig = {
+    pedidos: {
+      label: "Pedidos",
+
+    },
+  } satisfies ChartConfig;
+
   return (
     <main className="sm:ml-14">
       <h1 className="m-5 font-bold text-lg lg:text-2xl">Dahsboard Geral</h1>
@@ -232,25 +184,28 @@ export default function Home() {
           titulo="Pedidos:"
           tituloDesc="Pedidos aprovados"
           icone={<ShoppingBag size={18} />}
-          dados={dataAprovadosCard}
+          dados={PedidosAprovadosCard(pedidos)}
+          onclick={() => router.push(rotaVendas)}
         />
         <Kards
           titulo="Ativos:"
           tituloDesc="Clientes Ativos"
           icone={<Users size={18} />}
-          dados={dataAtivosCard}
+          dados={ClientesAtivosCard(pedidos)}
         />
         <Kards
           titulo="Ticket:"
           tituloDesc="Ticket Médio"
           icone={<BadgeDollarSign size={18} />}
           dados="3200"
+          onclick={() => router.push(rotaVendas)}
         />
         <Kards
           titulo="Meta:"
           tituloDesc="Meta Atingida"
           icone={<Crosshair size={18} />}
           dados="20%"
+          onclick={() => router.push(rotaVendas)}
         />
       </section>
 
@@ -259,34 +214,19 @@ export default function Home() {
             lg:flex-row lg:flex-wrap lg:gap-5"
       >
         <div className="w-[95%] mb-5 lg:w-[60%] lg:mb-0">
-          <Grafico titulografico="Pedidos Realizados">
+          <Grafico titulografico="Pedidos Realizados" showButton onclick={() => router.push(rotaVendas)} >
             <ResponsiveContainer height={250}>
               <ChartContainer config={pedidosConfig} className="h-full w-full">
                 <LineChart accessibilityLayer data={dadosPedidos}>
                   <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="mes"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value) => value.slice(0, 3)}
-                  />
+                  <XAxis dataKey="mes" tickMargin={10} />
                   <YAxis />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent hideLabel />}
-                  />
+                  <ChartTooltip content={<ChartTooltipContent hideLabel />} />
                   <Line
                     dataKey="totalPedidos"
                     type="natural"
-                    stroke="var(--chart-1)"
+                    stroke={pedidosConfig.totalPedidos.color}
                     strokeWidth={2}
-                    dot={{
-                      fill: "var(--chart-1)",
-                    }}
-                    activeDot={{
-                      r: 6,
-                    }}
                   />
                 </LineChart>
               </ChartContainer>
@@ -294,7 +234,7 @@ export default function Home() {
           </Grafico>
         </div>
         <div className="w-[95%] lg:w-[35%]">
-          <Grafico titulografico="Clientes">
+          <Grafico titulografico="Clientes" showButton>
             <ChartContainer
               config={clientesConfig}
               className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[250px] pb-0"
@@ -314,8 +254,9 @@ export default function Home() {
         </div>
       </section>
       <section className="flex flex-col justify-center items-center  lg:flex-row lg:gap-5 ">
+
         <div className="w-[95%] mb-5 lg:w-[25%] lg:mb-0">
-          <Grafico titulografico="Vendas/Meta">
+          <Grafico titulografico="Vendas/Meta" showButton onclick={() => router.push(rotaVendas)}>
             <ResponsiveContainer height={250}>
               <ChartContainer
                 config={vendapormetaconfig}
@@ -402,55 +343,62 @@ export default function Home() {
             </ResponsiveContainer>
           </Grafico>
         </div>
+
         <div className="w-[95%] mb-5  lg:w-[39%] lg:mb-0">
-          <Grafico titulografico="Produtos">
+          <Grafico titulografico="Produtos Pedidos" showButton onclick={() => router.push(rotaVendas)} >
             <ResponsiveContainer height={250}>
               <ChartContainer config={produtosConfig} className="h-full w-full">
                 <BarChart
                   accessibilityLayer
-                  data={produtos}
+                  data={dadosProdutos}
                   layout="vertical"
-                  margin={{ left: 0 }}
                 >
                   <YAxis
-                    dataKey="produtos"
+                    dataKey="nome"
                     type="category"
-                    tickLine={false}
                     tickMargin={10}
-                    axisLine={false}
                     width={100}
                   />
-                  <XAxis type="number" dataKey="quantidade" hide />
+                  <XAxis type="number" dataKey="pedidos" hide />
                   <ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent hideLabel />}
                   />
+
                   <Bar
-                    dataKey="quantidade"
-                    layout="vertical"
-                    fill="var(--chart-1)"
-                  />
+                    dataKey="pedidos"
+                    label={{ position: "center", fill: "white" }}
+                  >
+                    {dadosProdutos.map((produto, index) => (
+                      <Cell key={`cell-${index}`} fill={produto.cor} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ChartContainer>
             </ResponsiveContainer>
           </Grafico>
         </div>
+
         <div className="w-[95%] lg:w-[30%]">
           <Tabelas
-            titulo="Top Clientes"
+            titulo="Clientes Em Destaque"
             colunas={["ID", "Nome", "Pedidos", "Total"]}
-            dados={faturas}
+            dados={dataTabela}
+            showButton
+            onClick={() => router.push(rotaVendas)}
             renderItem={(item) => (
               <>
-                <TableCell className="font-medium">{item.idcliente}</TableCell>
+                <TableCell className="font-medium">{item.id}</TableCell>
                 <TableCell>{item.nome}</TableCell>
-                <TableCell>{item.pedidos}</TableCell>
-                <TableCell className="text-right">{item.totalAmount}</TableCell>
+                <TableCell>{item.totalPedidos}</TableCell>
+                <TableCell className="text-right">
+                  R${item.totalValor.toLocaleString()}
+                </TableCell>
               </>
             )}
           />
         </div>
       </section>
-    </main>
+    </main >
   );
 }

@@ -16,14 +16,14 @@ interface cardsProps {
     tituloDesc?: string;
     icone: React.ReactNode;
     dados: React.ReactNode;
-
+    onclick?: () => void;
 }
 
-const Kards: React.FC<cardsProps> = ({ titulo, tituloDesc, icone, dados }) => (
-    <section className="flex flex-col rounded-lg w-full mb-2.5 ">
-        < Card >
+const Kards: React.FC<cardsProps> = ({ titulo, tituloDesc, icone, dados, onclick }) => (
+    <section className="flex flex-col rounded-lg w-full mb-2.5 cursor-pointer  ">
+        < Card onClick={onclick} >
             <CardHeader>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center"  >
                     <CardTitle className="text-[15px] text-gray-800 select-none
                     sm:text-lg">
                         {titulo}
