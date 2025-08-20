@@ -66,32 +66,9 @@ import { BuscarProdutos } from "@/api/produtos";
 import {
   CadastradosxAtivos,
   PedidosRealizados,
+  ClientesAtivosCard,
+  pedidosAprovadosCard,
 } from "@/services/funcoesHomepage";
-
-const pedidosConfig = {
-  desktop: {
-    label: "pedidos",
-    color: "var(--chart-1)",
-  },
-} satisfies ChartConfig;
-
-// const clientes = [
-//   { name: "Cadastrados", value: 350, fill: "var(--chart-1)" },
-//   { name: "Ativos", value: 100, fill: "var(--chart-2)" },
-// ];
-// const clientesConfig = {
-//   value: {
-//     label: "Clientes",
-//   },
-//   Cadastrados: {
-//     label: "Cadastrados",
-//     color: "var(--chart-1)",
-//   },
-//   Ativos: {
-//     label: "Ativos",
-//     color: "var(--chart-2)",
-//   },
-// } satisfies ChartConfig;
 
 const vendapormeta = [{ vendas: 1260, meta: 5700 }];
 
@@ -205,12 +182,19 @@ export default function Home() {
     FetchProdutos();
   }, []);
 
-  // DATA CADASTRADOS X ATIVOS:
-  const dadosClientes = CadastradosxAtivos(clientes, pedidos);
+  // CARDS:
+
+  // PEDIDOS REALIZADOS:
+  const dataAprovadosCard = pedidosAprovadosCard(pedidos);
+  // DATA CLIENTES ATIVOS:
+  const dataAtivosCard = ClientesAtivosCard(pedidos);
+
+  //GRAFICOS:
 
   // DATA PEDIDOS REALIZADOS:
   const dadosPedidos = PedidosRealizados(pedidos);
-
+  // DATA CADASTRADOS X ATIVOS:
+  const dadosClientes = CadastradosxAtivos(clientes, pedidos);
 
   //CONFIGS
   const clientesConfig = {
@@ -248,13 +232,13 @@ export default function Home() {
           titulo="Pedidos:"
           tituloDesc="Pedidos aprovados"
           icone={<ShoppingBag size={18} />}
-          dados="200"
+          dados={dataAprovadosCard}
         />
         <Kards
           titulo="Ativos:"
           tituloDesc="Clientes Ativos"
           icone={<Users size={18} />}
-          dados="55"
+          dados={dataAtivosCard}
         />
         <Kards
           titulo="Ticket:"
@@ -367,7 +351,7 @@ export default function Home() {
                                 y={(viewBox.cy || 0) - 16}
                                 className="fill-foreground text-2xl font-bold"
                               >
-                                {totalVisitors.toLocaleString()}
+                                R${totalVisitors.toLocaleString()}
                               </tspan>
                               <tspan
                                 x={viewBox.cx}

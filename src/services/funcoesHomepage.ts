@@ -1,8 +1,31 @@
 //types
 import { Cliente } from "@/types/clientes";
 import { Pedido } from "@/types/pedidos";
+import { Produto } from "@/types/produtos";
 
 // AQUI ESTA TODAS AS FUNCOES QUE SÃO USADAS NA HOMEPAGE:
+
+// CARDS:
+export function ClientesAtivosCard(pedidos: Pedido[]) {
+  return new Set(pedidos.map((pedido) => pedido.userId)).size;
+}
+
+export function pedidosAprovadosCard(pedidos: Pedido[]) {
+  return new Set(pedidos.map((pedido) => pedido.id)).size;
+}
+
+export function calcularValorPedido(
+  pedido: Pedido,
+  produtos: Produto[]
+) {
+  return pedido.products.reduce((total, item) => {
+    const produto = produtos.find((p) => p.id === item.productId);
+    if (!produto) return total; // se não encontrar, ignora
+    return total + produto.price * item.quantity;
+  }, 0);
+}
+
+// GRAFICOS:
 
 export function CadastradosxAtivos(clientes: Cliente[], pedidos: Pedido[]) {
   // buscando todos os clientes:
@@ -58,9 +81,6 @@ export function PedidosRealizados(pedidos: Pedido[]) {
       console.error("Erro ao processar data:", pedido.date, error);
     }
   });
-
-  console.log("Contagem por mês:", contagem);
-
   return meses
     .map((mes) => ({ mes, totalPedidos: contagem[mes] || 0 }))
     .filter((item) => item.totalPedidos > 0);
