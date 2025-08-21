@@ -86,8 +86,11 @@ const totalVisitors = vendapormeta[0].vendas;
 
 
 export default function Home() {
+
+  //Rotas
   const router = useRouter();
   const rotaVendas = "/vendas";
+  const rotaClientes = "/clientes"
 
 
   //constantes states
@@ -178,7 +181,7 @@ export default function Home() {
       sm:w-[80%]
       md:w-[75%]
       lg:grid-cols-4 
-      2xl:w-[70%] 2xl:gap-15"
+      2xl:w-[70%] 2xl:gap-15 cursor-pointer "
       >
         <Kards
           titulo="Pedidos:"
@@ -186,12 +189,14 @@ export default function Home() {
           icone={<ShoppingBag size={18} />}
           dados={PedidosAprovadosCard(pedidos)}
           onclick={() => router.push(rotaVendas)}
+          
         />
         <Kards
           titulo="Ativos:"
           tituloDesc="Clientes Ativos"
           icone={<Users size={18} />}
           dados={ClientesAtivosCard(pedidos)}
+          onclick={() => router.push(rotaClientes)}
         />
         <Kards
           titulo="Ticket:"
@@ -234,7 +239,7 @@ export default function Home() {
           </Grafico>
         </div>
         <div className="w-[95%] lg:w-[35%]">
-          <Grafico titulografico="Clientes" showButton>
+          <Grafico titulografico="Clientes" showButton onclick={() => router.push(rotaClientes)}>
             <ChartContainer
               config={clientesConfig}
               className="[&_.recharts-pie-label-text]:fill-foreground mx-auto aspect-square max-h-[250px] pb-0"
@@ -385,7 +390,7 @@ export default function Home() {
             colunas={["ID", "Nome", "Pedidos", "Total"]}
             dados={dataTabela}
             showButton
-            onClick={() => router.push(rotaVendas)}
+            onClick={() => router.push(rotaClientes)}
             renderItem={(item) => (
               <>
                 <TableCell className="font-medium">{item.id}</TableCell>

@@ -1,5 +1,4 @@
 //types
-import { Cliente } from "@/types/clientes";
 import { Pedido } from "@/types/pedidos";
 import { Produto } from "@/types/produtos";
 
@@ -26,11 +25,7 @@ export function PedidosRealizados(pedidos: Pedido[]) {
     pedidos.forEach((pedido) => {
         try {
             const data = new Date(pedido.date);
-            const mes = data
-                .toLocaleString("pt-BR", { month: "short" })
-                .replace(".", "")
-                .toLowerCase();
-
+            const mes = data.toLocaleString("pt-BR", { month: "short" }).replace(".", "").toLowerCase();
             if (!contagem[mes]) {
                 contagem[mes] = 0;
             }
@@ -47,6 +42,14 @@ export function PedidosRealizados(pedidos: Pedido[]) {
 export function ProdutosMaisPedidos(pedidos: Pedido[], produtos: Produto[]) {
     const contagemProdutos: Record<number, number> = {}
 
+    const cores = [
+        "var(--chart-1)",
+        "var(--chart-2)",
+        "var(--chart-3)",
+        "var(--chart-4)",
+        "var(--chart-5)"
+    ];
+
     pedidos.forEach((pedido) => {
         pedido.products.forEach((produto) => {
             if (!contagemProdutos[produto.productId]) {
@@ -59,13 +62,6 @@ export function ProdutosMaisPedidos(pedidos: Pedido[], produtos: Produto[]) {
         .map(([productId, total]) => ({ productId: Number(productId), total }))
         .sort((a, b) => b.total - a.total).slice(0, 5);
 
-    const cores = [
-        "var(--chart-1)",
-        "var(--chart-2)",
-        "var(--chart-3)",
-        "var(--chart-4)",
-        "var(--chart-5)"
-    ];
 
     const produtosComNome = produtosOrdenados.map((p, index) => {
         const produtoInfo = produtos.find((prod) => prod.id === p.productId);

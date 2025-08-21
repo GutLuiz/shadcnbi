@@ -51,6 +51,8 @@ import {
 
 //servicos
 import { topClientes } from "@/services/clientes";
+import { totalGeralVendas, ProdutoMaisVendido } from "@/services/vendas";
+
 
 
 //types
@@ -178,6 +180,12 @@ export default function VendasPage() {
     //TABELAS:
     const dataTabela = topClientes(pedidos, clientes, produtos)
 
+    // Total geral de vendas
+    const totalGeral = totalGeralVendas(pedidos, produtos);
+
+    // produto lider de vendas
+    const totalProduto = ProdutoMaisVendido(pedidos, produtos);
+
     return (
         <main className="sm:ml-14">
             <h1 className="m-5 font-bold text-lg lg:text-2xl">DashBoard Vendas</h1>
@@ -191,7 +199,7 @@ export default function VendasPage() {
                     titulo="Produto:"
                     tituloDesc="Mais Vendido"
                     icone={<Package size={18} />}
-                    dados="Teclado gamer hypex"
+                    dados={totalProduto.nome}
                 />
                 <Kards
                     titulo="Fornecedor:"
@@ -203,7 +211,7 @@ export default function VendasPage() {
                     titulo="Vendas:"
                     tituloDesc="Total Vendas"
                     icone={<BadgeDollarSign size={18} />}
-                    dados="32000"
+                    dados={`R$ ${totalGeral.toLocaleString()}`}
                 />
             </section>
             <section

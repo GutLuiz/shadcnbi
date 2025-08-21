@@ -20,7 +20,7 @@ interface cardsProps {
 }
 
 const Kards: React.FC<cardsProps> = ({ titulo, tituloDesc, icone, dados, onclick }) => (
-    <section className="flex flex-col rounded-lg w-full mb-2.5 cursor-pointer  ">
+    <section className="flex flex-col rounded-lg w-full mb-2.5 ">
         < Card onClick={onclick} >
             <CardHeader>
                 <div className="flex items-center justify-center"  >

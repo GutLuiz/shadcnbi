@@ -67,7 +67,7 @@ export function Header() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                href="/clientes"
                 className=" flex h-10 w-10 shrink-0 items-center justify-center 
                 text-muted-foreground transition-colors hover:text-foreground">
                 <User className="h-5 w-5" />
@@ -78,7 +78,7 @@ export function Header() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="#"
+                href="/titulos"
                 className=" flex h-10 w-10 shrink-0 items-center justify-center 
                 text-muted-foreground transition-colors hover:text-foreground">
                 <Receipt className="h-5 w-5" />
@@ -121,14 +121,14 @@ export function Header() {
                   Vendas
                 </Link>
                 <Link
-                  href="#"
+                  href="/clientes"
                   className="flex items-center gap-4 px-2.5  hover:text-foreground"
                 >
                   <User className="h-5 w-5 transition-all" />
                   Clientes
                 </Link>
                 <Link
-                  href="#"
+                  href="/titulos"
                   className="flex items-center gap-4 px-2.5  hover:text-foreground"
                 >
                   <Receipt className="h-5 w-5 transition-all" />

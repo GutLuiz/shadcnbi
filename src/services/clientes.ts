@@ -57,3 +57,42 @@ export function topClientes(pedidos: Pedido[], clientes: Cliente[], produtos: Pr
 
     return clientesComNome;
 }
+
+export function ClientesCategoria(pedidos: Pedido[], produtos: Produto[]) {
+    const cores = [
+        "var(--chart-1)",
+        "var(--chart-2)",
+        "var(--chart-3)",
+        "var(--chart-4)",
+        "var(--chart-5)"
+    ];
+
+
+    const contagemCategoria: Record<string, number> = {}
+
+    pedidos.forEach((pedido) => {
+        pedido.products.forEach((produto) => {
+            const produtoInfo = produtos.find((p) => p.id === produto.productId);
+            if (produtoInfo) {
+                const categoria = produtoInfo.category;
+                if (!contagemCategoria[categoria]) {
+                    contagemCategoria[categoria] = 0;
+                }
+                contagemCategoria[categoria] += produto.quantity;
+            }
+        });
+    });
+    const categoriasOrdenadas = Object.entries(contagemCategoria)
+        .map(([categoria, total]) => ({ categoria, total }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 5);
+
+
+    const dataClientes = categoriasOrdenadas.map((c, index) => ({
+        pedidos: c.total,
+        nome: c.categoria.slice(0, 8), 
+        cor: cores[index] || "var(--chart-1)",
+    }));
+
+    return dataClientes;
+}
